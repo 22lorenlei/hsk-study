@@ -1,0 +1,1 @@
+This is just me learning react.js as well as trying to learn some chinese. Learning from some youtube videos and all. 
