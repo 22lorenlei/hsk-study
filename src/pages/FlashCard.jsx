@@ -1,35 +1,38 @@
-import '../css/styles.css'
-import React, { useState, useEffect } from 'react'
-import {Link} from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
 
-function FlashCard() {
-  let hsk1Set
-  const [showHsk1Set, setHsk1Data] = useState();  
-  fetch('https://raw.githubusercontent.com/clem109/hsk-vocabulary/refs/heads/master/hsk-vocab-json/hsk-level-1.json')
-  .then((response) => response.json())
-  .then((responseJson) => {
-    hsk1Set = responseJson.map(function(data) {
-      console.log(data.hanzi);
-      return(<>
-      <p> Hanzi: {data.hanzi} </p>
-      <p> Pinyin: {data.pinyin} </p>
-      </>
-      )
-    })
-    setHsk1Data(hsk1Set)
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+function getHSK1Data() {
+  const [hsk1Set, setHsk1Set] = useState(null);
+
+  useEffect(() => {
+    fetch('https://raw.githubusercontent.com/clem109/hsk-vocabulary/refs/heads/master/hsk-vocab-json/hsk-level-1.json')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setHsk1Set(responseJson);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  return hsk1Set;
+}
+
+i = 0
+
+function flashCardSet1() {
+  const hsk1Set = getHSK1Data();
+  
+  if (!hsk1Set) {
+    return <p>Loading...</p>;
+  }
+  
   return (
     <>
-    <h1 className="center-content"> This is the Flash Card Page </h1>
-    {showHsk1Set}
-    <Link to="/">
-      <button> Go to home page </button>
-    </Link>
+      <div className={flashCardClass}>
+        { hsk1Set[i].hanzi }
+      </div>
     </>
   )
 }
-  
-export default FlashCard
+
+export default flashCardSet1;
