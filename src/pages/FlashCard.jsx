@@ -17,10 +17,24 @@ function getHSK1Data() {
   return hsk1Set;
 }
 
-i = 0
-
 function flashCardSet1() {
   const hsk1Set = getHSK1Data();
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(prevCount => prevCount + 1);
+  };
+
+  const decrement = () => {
+    setCount(prevCount => prevCount - 1);
+  }
+
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  }
   
   if (!hsk1Set) {
     return <p>Loading...</p>;
@@ -28,9 +42,25 @@ function flashCardSet1() {
   
   return (
     <>
-      <div className={flashCardClass}>
-        { hsk1Set[i].hanzi }
-      </div>
+      <button onClick={toggleVisibility}>
+        {isVisible ? 'Hide' : 'Show'}
+      </button>
+      <button onClick={increment}>
+          Go next
+      </button>
+      <button onClick={decrement}> 
+          Go back
+      </button>
+      {isVisible && (
+        <div>
+          { hsk1Set[count].hanzi }
+        </div>
+      )}
+      {!isVisible && (
+        <div>
+          { hsk1Set[count].pinyin }
+        </div>
+      )}
     </>
   )
 }
