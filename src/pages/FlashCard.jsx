@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-let hsk1JsonURL = "https://raw.githubusercontent.com/clem109/hsk-vocabulary/refs/heads/master/hsk-vocab-json/hsk-level-2.json";
+let hsk1JsonURL = "https://raw.githubusercontent.com/clem109/hsk-vocabulary/refs/heads/master/hsk-vocab-json/hsk-level-1.json";
 
 let hsk2JsonURL = "https://raw.githubusercontent.com/clem109/hsk-vocabulary/refs/heads/master/hsk-vocab-json/hsk-level-2.json";
 
@@ -12,22 +12,6 @@ let hsk5JsonURL = "https://raw.githubusercontent.com/clem109/hsk-vocabulary/refs
 
 let hsk6JsonURL = "https://raw.githubusercontent.com/clem109/hsk-vocabulary/refs/heads/master/hsk-vocab-json/hsk-level-6.json";
 
-function getHSK1Data(chosenURL) {
-  let [hskSet, setHskSet] = useState(null);
-  useEffect(() => {
-    fetch(chosenURL)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setHskSet(responseJson);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-  console.log(hskSet);
-  return hskSet;
-}
-
 function flashCardSet1() {
 
   const [isVisible, setIsVisible] = useState(false);
@@ -36,7 +20,20 @@ function flashCardSet1() {
 
   const [hskURL, setHskURL] = useState(hsk1JsonURL);
 
-  let hskSet = getHSK1Data(hskURL);
+  const [hskSet, setHskSet] = useState(null);
+
+  useEffect(() => {
+    if (!hskURL) return;
+
+    fetch(hskURL)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setHskSet(responseJson);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [hskURL]);
 
   const increment = () => {
     setCount(prevCount => prevCount + 1);
@@ -46,40 +43,15 @@ function flashCardSet1() {
     setCount(prevCount => prevCount - 1);
   }
 
-  const changeHSK1 = () => {
+  const changeHSK = (url) => {
     setCount(0);
-    setHskURL(hsk1JsonURL)
-  }
-
-  const changeHSK2 = () => {
-    setCount(0);
-    setHskURL(hsk2JsonURL);
-  }
-
-  const changeHSK3 = () => {
-    setCount(0);
-    setHskURL(hsk3JsonURL);
-  }
-
-  const changeHSK4 = () => {
-    setCount(0);
-    setHskURL(hsk4JsonURL);
-  }
-
-  const changeHSK5 = () => {
-    setCount(0);
-    setHskURL(hsk5JsonURL);
-  }
-
-  const changeHSK6 = () => {
-    setCount(0);
-    setHskURL(hsk6JsonURL);
-  }
+    setHskURL(url);
+  };
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
   }
-  
+
   if (!hskSet) {
     return <p>Loading...</p>;
   }
@@ -95,22 +67,22 @@ function flashCardSet1() {
       <button onClick={decrement}> 
           Go back
       </button>
-      <button onClick={changeHSK1}>
+      <button onClick={() => changeHSK(hsk1JsonURL)}>
         HSK1
       </button>
-      <button onClick={changeHSK2}>
+      <button onClick={() => changeHSK(hsk2JsonURL)}>
         HSK2
       </button>
-      <button onClick={changeHSK3}>
+      <button onClick={() => changeHSK(hsk3JsonURL)}>
         HSK3
       </button>
-      <button onClick={changeHSK4}>
+      <button onClick={() => changeHSK(hsk4JsonURL)}>
         HSK4
       </button>
-      <button onClick={changeHSK5}>
+      <button onClick={() => changeHSK(hsk5JsonURL)}>
         HSK5
       </button>
-      <button onClick={changeHSK6}>
+      <button onClick={() => changeHSK(hsk6JsonURL)}>
         HSK6
       </button>
       {isVisible && (
