@@ -23,7 +23,9 @@ function flashCardSet1() {
   const [hskSet, setHskSet] = useState(null);
 
   useEffect(() => {
-    if (!hskURL) return;
+    if (!hskURL) {
+      return;
+    }
 
     fetch(hskURL)
       .then((response) => response.json())
@@ -36,11 +38,14 @@ function flashCardSet1() {
   }, [hskURL]);
 
   const increment = () => {
-    setCount(prevCount => prevCount + 1);
+    if (count < hskSet.length)
+    setCount(count => count + 1);
   };
 
   const decrement = () => {
-    setCount(prevCount => prevCount - 1);
+    if (count > 0) {
+      setCount(count => count - 1);
+    }
   }
 
   const changeHSK = (url) => {
@@ -95,6 +100,8 @@ function flashCardSet1() {
           { hskSet[count].pinyin }
         </div>
       )}
+      
+      <p> Card: { count } / { hskSet.length } </p>
     </>
   )
 }
