@@ -9,3 +9,11 @@
 .show {
     display: block
 }
+
+.characterFontSize {
+    font-size: 25px;
+}
+
+.centerContent {
+    text-align: center;
+}
