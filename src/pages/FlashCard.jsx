@@ -20,6 +20,7 @@ let hsk6JsonURL =
   "https://raw.githubusercontent.com/clem109/hsk-vocabulary/refs/heads/master/hsk-vocab-json/hsk-level-6.json";
 
 function flashCardSet1() {
+
   const [isVisible, setIsVisible] = useState(false);
 
   const [currentHSK, setHSKName] = useState("HSK 1");
@@ -29,6 +30,12 @@ function flashCardSet1() {
   const [hskURL, setHskURL] = useState(hsk1JsonURL);
 
   const [hskSet, setHskSet] = useState(null);
+
+  console.log(hskSet);
+
+  const [flashCardOrder, setCardOrderArray] = useState();
+
+  
 
   useEffect(() => {
     if (!hskURL) {
@@ -44,6 +51,18 @@ function flashCardSet1() {
         console.error(error);
       });
   }, [hskURL]);
+
+  const randomize = () => {
+    for (let i = 0; i < questionOrder.length - 1; i++) {
+      if (Math.floor(Math.random() * 10) >= 3) {
+        let luckyNumber = Math.floor(Math.random() * questionOrder.length);
+        let temp = questionOrder[i];
+        questionOrder[i] = questionOrder[luckyNumber];
+        questionOrder[luckyNumber] = temp; 
+      }
+    }
+    setCardOrderArray(questionOrder);
+  }
 
   const increment = () => {
     if (count < hskSet.length) setCount((count) => count + 1);
@@ -78,6 +97,7 @@ function flashCardSet1() {
         </button>
         <button onClick={increment}>Go next</button>
         <button onClick={decrement}>Go back</button>
+        <button onClick={randomize}>Randomize/Normalize</button>
         {!isVisible && (
           <div className="characterFontSize">{hskSet[count].hanzi}</div>
         )}
