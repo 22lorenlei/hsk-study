@@ -19,8 +19,21 @@ let hsk5JsonURL =
 let hsk6JsonURL =
   "https://raw.githubusercontent.com/clem109/hsk-vocabulary/refs/heads/master/hsk-vocab-json/hsk-level-6.json";
 
-function flashCardSet1() {
+function randomizeFunction(array) {
+  let randomizedArray = [...array];
+  for (let i = 0; i < array.length - 1; i++) {
+    let luckyNumber = Math.floor(Math.random() * array.length);
+    if (Math.random() > 0.2) {
+      [randomizedArray[i], randomizedArray[luckyNumber]] = [
+        randomizedArray[luckyNumber],
+        randomizedArray[i],
+      ];
+    }
+  }
+  return randomizedArray;
+}
 
+function flashCardSet1() {
   const [isVisible, setIsVisible] = useState(false);
 
   const [currentHSK, setHSKName] = useState("HSK 1");
@@ -31,11 +44,7 @@ function flashCardSet1() {
 
   const [hskSet, setHskSet] = useState(null);
 
-  console.log(hskSet);
-
-  const [flashCardOrder, setCardOrderArray] = useState();
-
-  
+  const [hskSetOriginal, setOriginalOrderSet] = useState(null);
 
   useEffect(() => {
     if (!hskURL) {
@@ -46,26 +55,15 @@ function flashCardSet1() {
       .then((response) => response.json())
       .then((responseJson) => {
         setHskSet(responseJson);
+        setOriginalOrderSet(responseJson);
       })
       .catch((error) => {
         console.error(error);
       });
   }, [hskURL]);
 
-  const randomize = () => {
-    for (let i = 0; i < questionOrder.length - 1; i++) {
-      if (Math.floor(Math.random() * 10) >= 3) {
-        let luckyNumber = Math.floor(Math.random() * questionOrder.length);
-        let temp = questionOrder[i];
-        questionOrder[i] = questionOrder[luckyNumber];
-        questionOrder[luckyNumber] = temp; 
-      }
-    }
-    setCardOrderArray(questionOrder);
-  }
-
   const increment = () => {
-    if (count < hskSet.length) setCount((count) => count + 1);
+    if (count < hskSet.length - 1) setCount((count) => count + 1);
   };
 
   const decrement = () => {
@@ -84,29 +82,47 @@ function flashCardSet1() {
     setIsVisible(!isVisible);
   };
 
+  const normalize = () => {
+    setHskSet(hskSetOriginal);
+  };
+
+  const randomize = () => {
+    setHskSet(randomizeFunction(hskSet));
+  };
+
   if (!hskSet) {
     return <p>Loading...</p>;
   }
 
   return (
     <>
-      <div className="centerContent">
+      <div>
+        <Link to="/">
+          <button> Go to Home Page </button>
+        </Link>
+      </div>
+      <div className="app-container">
         <div>Showing vocabulary for {currentHSK}</div>
-        <button onClick={toggleVisibility}>
-          {isVisible ? "Hide" : "Show"}
-        </button>
-        <button onClick={increment}>Go next</button>
-        <button onClick={decrement}>Go back</button>
-        <button onClick={randomize}>Randomize/Normalize</button>
-        {!isVisible && (
-          <div className="characterFontSize">{hskSet[count].hanzi}</div>
-        )}
-        {isVisible && (
-          <div className="characterFontSize">{hskSet[count].pinyin}</div>
-        )}
+        <div className="flashcard-button-div">
+          <button onClick={toggleVisibility}>
+            {isVisible ? "Hide" : "Show"}
+          </button>
+          <button onClick={increment}>Go next</button>
+          <button onClick={decrement}>Go back</button>
+          <button onClick={randomize}>Randomize</button>
+          <button onClick={normalize}>Normalize</button>
+        </div>
+        <div className="flashcard flashcard-container">
+          {!isVisible && (
+            <div className="character-font-size">{hskSet[count].hanzi}</div>
+          )}
+          {isVisible && (
+            <div className="character-font-size">{hskSet[count].pinyin}</div>
+          )}
+        </div>
 
         <p>
-          Card: {count} / {hskSet.length} items
+          Card: {count + 1} / {hskSet.length} items
         </p>
 
         <div>
@@ -116,11 +132,6 @@ function flashCardSet1() {
           <button onClick={() => changeHSK(hsk4JsonURL, "HSK 4")}>HSK4</button>
           <button onClick={() => changeHSK(hsk5JsonURL, "HSK 5")}>HSK5</button>
           <button onClick={() => changeHSK(hsk6JsonURL, "HSK 6")}>HSK6</button>
-        </div>
-        <div>
-          <Link to="/">
-            <button> Go to Home Page </button>
-          </Link>
         </div>
       </div>
     </>

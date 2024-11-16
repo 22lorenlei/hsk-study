@@ -1,19 +1,43 @@
-.center-content {
-    text-align: center;
-}
-
 .hide {
-    display: none
+  display: none;
 }
 
 .show {
-    display: block
+  display: block;
 }
 
-.characterFontSize {
-    font-size: 25px;
+.character-font-size {
+  font-size: 40px;
 }
 
-.centerContent {
-    text-align: center;
+.center-content {
+  text-align: center;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers horizontally */
+  height: 100vh; /* Full viewport height */
+  justify-content: center;
+}
+
+.flashcard {
+  width: 500px;
+  height: 300px;
+  border: 1px solid #000000;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #DFDEDE;
+}
+
+.flashcard-container {
+  display: flex;
+  justify-content: center; /* Center the flashcard horizontally */
+}
+
+.flashcard-button-div {
+    margin: 30px;
 }
