@@ -61,8 +61,11 @@ function flashCardSet() {
   // This is the pristine set we keep (in regular order) for the normalize function
   const [hskSetOriginal, setOriginalOrderSet] = useState(null);
 
+  const [reviewList, setReviewList] = useState([]);
+
   // Updates if hskURL changes, so if you change the hsk set
   useEffect(() => {
+    
     // In case it doesn't load in time
     if (!hskURL) {
       return;
@@ -79,6 +82,21 @@ function flashCardSet() {
         console.error(error);
       });
   }, [hskURL]);
+
+  const toggleReview = (id) => {
+    const card = hskSet.find(flashcard => flashcard.id === id);
+    if (!card) {
+      return
+    }
+
+    const isMarkedForReview = reviewList.some(flashcard => flashcard.id === id);
+
+    if (isMarkedForReview) {
+      setReviewList(reviewList.filter(flashcard => flashcard.id !== id));
+    } else {
+      setReviewList([...reviewList, card]);
+    }
+  }
 
   // Go up by one card
   const increment = () => {
@@ -115,6 +133,17 @@ function flashCardSet() {
     setHskSet(randomizeFunction(hskSet));
   };
 
+  const setReviewSet = (list) => {
+    if (reviewList.length == 0) {
+      alert("Nothing to review");
+      return
+    }
+    setCount(0);
+    setHSKName("Review Set");
+    setHskSet(list);
+    setHskURL(null);
+  }
+
   // If somehow the hskSet isn't there
   if (!hskSet) {
     return <p>Loading...</p>;
@@ -141,6 +170,7 @@ function flashCardSet() {
           <button onClick={decrement}>Go back</button>
           <button onClick={randomize}>Randomize</button>
           <button onClick={normalize}>Normalize</button>
+          <button onClick={() => toggleReview(hskSet[count].id)}>Toggle Review</button>
         </div>
 
         {/* This is the flash card content */}
@@ -170,6 +200,7 @@ function flashCardSet() {
           <button onClick={() => changeHSK(hsk4JsonURL, "HSK 4")}>HSK4</button>
           <button onClick={() => changeHSK(hsk5JsonURL, "HSK 5")}>HSK5</button>
           <button onClick={() => changeHSK(hsk6JsonURL, "HSK 6")}>HSK6</button>
+          <button onClick={() => setReviewSet(reviewList)}> Switch to Review Mode </button>
         </div>
       </div>
     </>
