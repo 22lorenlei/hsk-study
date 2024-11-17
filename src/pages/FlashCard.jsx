@@ -32,6 +32,15 @@ function randomizeFunction(array) {
   return randomizedArray;
 }
 
+function translationPrettifier(array) {
+  let str = "";
+  for (let i = 0; i < array.length; i++) {
+    str += array[i];
+    str += "; ";
+  }
+  return str;
+}
+
 // Main flash card app
 function flashCardSet() {
   // This is used for the pinyin and character flip
@@ -140,7 +149,11 @@ function flashCardSet() {
             <div className="character-font-size">{hskSet[count].hanzi}</div>
           )}
           {isVisible && (
-            <div className="character-font-size">{hskSet[count].pinyin}</div>
+            <div className="center-content">
+              <div className="character-font-size">{hskSet[count].pinyin}</div>
+              <div> {translationPrettifier(hskSet[count].translations)}
+                </div>
+            </div>
           )}
         </div>
 
@@ -148,7 +161,7 @@ function flashCardSet() {
         <p>
           Card: {count + 1} / {hskSet.length} items
         </p>
-        
+
         {/* HSK set navigation */}
         <div>
           <button onClick={() => changeHSK(hsk1JsonURL, "HSK 1")}>HSK1</button>
